@@ -1,6 +1,5 @@
 
 
-
 describe('pruebas de apis', () => {
 
     it('Debe obtener y usar datos de Ditto', () => {

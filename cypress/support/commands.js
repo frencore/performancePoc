@@ -23,6 +23,11 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+
+
+
+
 /**
  * Realiza una solicitud GET a la API y almacena la respuesta en un alias dinámico.
  * 
@@ -47,5 +52,34 @@ Cypress.Commands.add('apiGet', (endpoint) => {
     });
 });
 
+/**
+ * Comando personalizado para extraer el JSON de un elemento HTML y guardarlo en un alias.
+ * 
+ * @param {string} selector - El selector CSS del elemento que contiene el JSON.
+ * @param {string} aliasName - El nombre del alias en el que se guardará el JSON extraído.
+ */
+Cypress.Commands.add('guardarJsonDesdeElemento', (selector, aliasName) => {
+    // Validación de parámetros
+    if (!selector || !aliasName) {
+      throw new Error('Debe proporcionar un selector y un nombre de alias.');
+    }
+  
+    cy.get(selector) // Encuentra el elemento utilizando el selector proporcionado
+      .invoke('text') // Extrae el texto (JSON en formato string) del elemento
+      .then((jsonTexto) => {
+        try {
+          // Intenta parsear el texto como JSON
+          const jsonObj = JSON.parse(jsonTexto);
+          
+          // Guarda el JSON parseado en el alias especificado
+          cy.wrap(jsonObj).as(aliasName);
+        } catch (error) {
+          console.error('Error al parsear el JSON: ', error);
+          throw new Error('El contenido extraído no es un JSON válido.');
+        }
+      });
+  });
+  
+  
 
 

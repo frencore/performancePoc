@@ -23,3 +23,29 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+/**
+ * Realiza una solicitud GET a la API y almacena la respuesta en un alias dinámico.
+ * 
+ * @function apiGet
+ * @param {string} endpoint - El endpoint de la API al que se desea hacer la solicitud (ej. 'ditto', 'pikachu').
+ * @example
+ *  Llamar al endpoint 'ditto' y almacenar la respuesta en @dittoData
+ * cy.apiGet('ditto');
+ * 
+ *  Luego, en el test se puede acceder a los datos con:
+ * cy.get('@dittoData').then((data) => {
+ *     cy.log(data.abilities[0].ability.name);
+ * });
+ */
+Cypress.Commands.add('apiGet', (endpoint) => {
+    const aliasName = `${endpoint}Data`; // Genera un alias dinámico basado en el endpoint
+
+    cy.request('GET', `${Cypress.env('urlApi')}/${endpoint}`).then((response) => {
+        expect(response.status).to.equal(200);
+        cy.log(JSON.stringify(response.body, null, 2)); // Imprime la respuesta JSON
+        cy.wrap(response.body).as(aliasName); // Guarda la respuesta con alias dinámico
+    });
+});
+
+
+

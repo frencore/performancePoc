@@ -86,7 +86,7 @@ Cypress.Commands.add("guardarJsonDesdeElemento", (selector, aliasName) => {
  *
  * @example
  *
- * // En una prueba, puedes usar este comando de la siguiente manera:
+ * En una prueba, puedes usar este comando de la siguiente manera:
  * cy.compararJsonPorAlias('apiResponse', 'jsonResponse');
  *
  * Esto comparará los datos del alias 'apiResponse' (respuesta de la API)
@@ -129,4 +129,50 @@ Cypress.Commands.add("compararJsonPorAlias", (apiAlias, uiAlias) => {
       expect(apiData).to.deep.equal(uiJson);
     });
   });
+});
+// Agregamos un nuevo comando personalizado a Cypress llamado "mockPikachu"
+// Este comando intercepta la petición a la API de PokeAPI para Pikachu y devuelve un JSON mockeado.
+Cypress.Commands.add('mockPikachu', () => {
+  cy.intercept('GET', 'https://pokeapi.co/api/v2/pokemon/pikachu', {
+    statusCode: 200, // Simulamos una respuesta HTTP 200 (éxito)
+    body: {
+      // Datos simulados que imitan la estructura de la respuesta real de PokeAPI
+      name: 'pikachu', // Nombre del Pokémon
+      id: 25, // ID en la Pokédex
+      base_experience: 112, // Experiencia base del Pokémon
+      height: 4, // Altura en decímetros (PokeAPI usa esta unidad)
+      weight: 60, // Peso en hectogramos (PokeAPI usa esta unidad)
+      abilities: [
+        {
+          ability: { 
+            name: 'static', // Habilidad principal
+            url: 'https://pokeapi.co/api/v2/ability/9/' // URL de la habilidad en la API
+          },
+          is_hidden: false, // No es una habilidad oculta
+          slot: 1, // Prioridad en la lista de habilidades
+        },
+        {
+          ability: { 
+            name: 'lightning-rod', // Habilidad secundaria
+            url: 'https://pokeapi.co/api/v2/ability/31/' // URL de la habilidad en la API
+          },
+          is_hidden: true, // Es una habilidad oculta
+          slot: 3, // Posición en la lista de habilidades
+        },
+      ],
+      sprites: {
+        // Imagen frontal del sprite del Pokémon
+        front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+      },
+      types: [
+        {
+          slot: 1, // Posición del tipo (puede tener más de uno)
+          type: { 
+            name: 'electric', // Tipo principal del Pokémon
+            url: 'https://pokeapi.co/api/v2/type/13/' // URL de la información del tipo
+          },
+        },
+      ],
+    },
+  }).as('getPikachu'); // Asignamos un alias a la interceptación para poder hacer "wait" en la prueba
 });

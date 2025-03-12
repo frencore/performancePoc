@@ -130,49 +130,66 @@ Cypress.Commands.add("compararJsonPorAlias", (apiAlias, uiAlias) => {
     });
   });
 });
-// Agregamos un nuevo comando personalizado a Cypress llamado "mockPikachu"
-// Este comando intercepta la petición a la API de PokeAPI para Pikachu y devuelve un JSON mockeado.
-Cypress.Commands.add('mockPikachu', () => {
+/**
+ * Agrega un comando personalizado que simula una respuesta de la API de PokeAPI para Pikachu.
+ *
+ * Este comando intercepta las solicitudes GET a la API de PokeAPI para el Pokémon Pikachu y devuelve 
+ * un JSON mockeado con datos simulados. Además, permite personalizar el código de respuesta HTTP 
+ * (por defecto es 200). Esto facilita la prueba de cómo la UI maneja diferentes códigos de estado HTTP.
+ *
+ * @param {number} statusCode - El código de respuesta HTTP que se simulará. El valor predeterminado es 200.
+ * @example
+ *
+ * En una prueba, puedes usar este comando de la siguiente manera:
+ *
+ * // Usar el código de respuesta 200 (éxito) por defecto
+ * cy.mockPikachu();
+ *
+ * // Usar un código de respuesta 404 para simular un error de no encontrado
+ * cy.mockPikachu(404);
+ *
+ * Esto interceptará la solicitud GET a la API de PokeAPI para Pikachu y devolverá un JSON mockeado 
+ * con los datos del Pokémon, o una respuesta simulada con el código de estado HTTP especificado.
+ */
+Cypress.Commands.add('mockPikachu', (statusCode = 200) => {
   cy.intercept('GET', 'https://pokeapi.co/api/v2/pokemon/pikachu', {
-    statusCode: 200, // Simulamos una respuesta HTTP 200 (éxito)
+    statusCode: statusCode, // Usamos el código de respuesta HTTP proporcionado (por defecto 200)
     body: {
-      // Datos simulados que imitan la estructura de la respuesta real de PokeAPI
       name: 'pikachu', // Nombre del Pokémon
       id: 25, // ID en la Pokédex
       base_experience: 112, // Experiencia base del Pokémon
-      height: 4, // Altura en decímetros (PokeAPI usa esta unidad)
-      weight: 60, // Peso en hectogramos (PokeAPI usa esta unidad)
+      height: 4, // Altura en decímetros
+      weight: 60, // Peso en hectogramos
       abilities: [
         {
           ability: { 
             name: 'static', // Habilidad principal
-            url: 'https://pokeapi.co/api/v2/ability/9/' // URL de la habilidad en la API
+            url: 'https://pokeapi.co/api/v2/ability/9/' // URL de la habilidad
           },
-          is_hidden: false, // No es una habilidad oculta
-          slot: 1, // Prioridad en la lista de habilidades
+          is_hidden: false, // Habilidad no oculta
+          slot: 1, // Prioridad de la habilidad
         },
         {
           ability: { 
             name: 'lightning-rod', // Habilidad secundaria
-            url: 'https://pokeapi.co/api/v2/ability/31/' // URL de la habilidad en la API
+            url: 'https://pokeapi.co/api/v2/ability/31/' // URL de la habilidad
           },
-          is_hidden: true, // Es una habilidad oculta
-          slot: 3, // Posición en la lista de habilidades
+          is_hidden: true, // Habilidad oculta
+          slot: 3, // Prioridad de la habilidad
         },
       ],
       sprites: {
-        // Imagen frontal del sprite del Pokémon
-        front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+        front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png', // Imagen frontal
       },
       types: [
         {
-          slot: 1, // Posición del tipo (puede tener más de uno)
+          slot: 1, // Tipo principal
           type: { 
-            name: 'electric', // Tipo principal del Pokémon
-            url: 'https://pokeapi.co/api/v2/type/13/' // URL de la información del tipo
+            name: 'electric', // Tipo eléctrico
+            url: 'https://pokeapi.co/api/v2/type/13/' // URL del tipo eléctrico
           },
         },
       ],
     },
-  }).as('getPikachu'); // Asignamos un alias a la interceptación para poder hacer "wait" en la prueba
+  }).as('getPikachu'); // Alias para esperar la interceptación en las pruebas
 });

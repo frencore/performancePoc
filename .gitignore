@@ -6,3 +6,6 @@ cypress/fixtures/profile.json
 cypress/fixtures/example.json
 cypress/fixtures/users.json
 cypress/screenshots/
+#Gatling
+gatling/target/
+gatling/results/

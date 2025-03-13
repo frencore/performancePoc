@@ -1,7 +1,7 @@
 
 # PerformancePoc
 
-Este proyecto es una prueba de concepto para realizar pruebas de rendimiento en una API, además de pruebas end-to-end (E2E) en la interfaz de usuario (UI) de la aplicación. Se enfoca en la integración de pruebas con herramientas como Cypress para asegurar el rendimiento y la fiabilidad de la aplicación. En el futuro, se tiene la intención de incorporar **Gatling** para realizar pruebas de rendimiento más avanzadas.
+Este proyecto es una prueba de concepto para realizar pruebas de rendimiento en una API, además de pruebas end-to-end (E2E) en la interfaz de usuario (UI) de la aplicación. Se enfoca en la integración de pruebas con herramientas como Cypress para asegurar el rendimiento y la fiabilidad de la aplicación. **Gatling** ya ha sido integrado para realizar pruebas de rendimiento avanzadas.
 
 ## Descripción
 
@@ -9,7 +9,7 @@ El objetivo de este proyecto es evaluar el comportamiento de la aplicación en c
 
 Se ha implementado una suite de pruebas automatizadas usando **Cypress**, que incluye tanto pruebas de API como de UI, para asegurar que el sistema pueda manejar diferentes situaciones y ofrecer un rendimiento óptimo.
 
-**Futuro**: El proyecto tiene la intención de migrar las pruebas de rendimiento a **Gatling** para mejorar el análisis de rendimiento a gran escala.
+Además, se han integrado pruebas de carga con **Gatling** para realizar un análisis detallado del rendimiento de la API en escenarios de alto tráfico.
 
 ## Tecnologías Utilizadas
 
@@ -17,7 +17,7 @@ Se ha implementado una suite de pruebas automatizadas usando **Cypress**, que in
 - **Node.js**: Entorno de ejecución para JavaScript.
 - **Mocha**: Framework para realizar las pruebas.
 - **Chai**: Librería de aserciones utilizada con Mocha.
-- **Gatling** (próximamente): Herramienta para realizar pruebas de carga y rendimiento a gran escala.
+- **Gatling**: Herramienta para realizar pruebas de carga y rendimiento a gran escala.
 
 ## Requisitos
 
@@ -48,7 +48,7 @@ Se ha implementado una suite de pruebas automatizadas usando **Cypress**, que in
 
 1. **Pruebas de API**
 
-   Para ejecutar las pruebas de la API, ejecuta el siguiente comando: 
+   Para ejecutar las pruebas de la API, ejecuta el siguiente comando:
 
    ```bash
    npx cypress open
@@ -64,32 +64,54 @@ Se ha implementado una suite de pruebas automatizadas usando **Cypress**, que in
    npx cypress open
    ```
 
-   Dentro de Cypress, selecciona el archivo `endToend.cy.js` para ejecutar las pruebas en la interfaz de usuario.
+   Dentro de Cypress, selecciona el archivo `pruebaMock.cy.js` para ejecutar las pruebas de UI con mocks.
+
+3. **Pruebas de Carga con Gatling**
+
+   Para ejecutar las pruebas de carga de la API con Gatling, primero navega al directorio `gatling` y ejecuta:
+
+   ```bash
+   cd gatling
+   npm install
+   ```
+
+   Luego, corre la simulación de rendimiento con el siguiente comando:
+
+   ```bash
+   npx gatling run --simulation pokeApiLoadTest
+   ```
 
 ## Estructura del Proyecto
 
 ```
 ├── cypress/
 │   ├── e2e/
-│   │   ├── endToend.cy.js       # Archivo de pruebas end-to-end (UI)
-│   │   └── apiTests.cy.js       # Archivo de pruebas de API
+│   │   ├── pruebaMock.cy.js        # Archivo de pruebas con mocks en la UI
+│   │   ├── apiTests.cy.js         # Archivo de pruebas de API
+│   │   └── endToend.cy.js         # Archivo de pruebas end-to-end (UI)
 │   └── support/
-│       ├── commands.js          # Definición de comandos personalizados de Cypress
-│       ├── index.js             # Archivo principal de configuración de Cypress
-├── package.json                 # Dependencias y scripts del proyecto
-└── README.md                    # Este archivo de documentación
+│       ├── commands.js            # Definición de comandos personalizados de Cypress
+│       ├── index.js               # Archivo principal de configuración de Cypress
+├── gatling/
+│   └── src/
+│       └── pokeApiLoadTest.gatling.js   # Archivo de pruebas de carga con Gatling
+├── package.json                   # Dependencias y scripts del proyecto
+└── README.md                      # Este archivo de documentación
 ```
 
 ### Archivos principales:
 
-- **cypress/e2e/endToend.cy.js**  
-  Este archivo contiene las pruebas E2E que se ejecutan en la interfaz de usuario. Actualmente, se realizan pruebas para la búsqueda de un Pokémon en la PokeAPI.
+- **cypress/e2e/pruebaMock.cy.js**  
+  Este archivo contiene las pruebas con mocks en la interfaz de usuario. Se intercepta la API de Pikachu y se simulan respuestas tanto exitosas como con error (400).
 
 - **cypress/e2e/apiTests.cy.js**  
   Aquí se encuentran las pruebas de rendimiento en la API. A futuro, se implementarán pruebas más detalladas con Gatling.
 
+- **cypress/e2e/endToend.cy.js**  
+  Pruebas de extremo a extremo en la UI, como la búsqueda de Pokémon en la PokeAPI.
+
 - **cypress/support/commands.js**  
-  Aquí se encuentran los comandos personalizados de Cypress, incluyendo el comando `guardarJsonDesdeElemento`, que guarda un JSON desde un elemento en la página web.
+  Aquí se encuentran los comandos personalizados de Cypress, incluyendo el comando `mockPikachu`, que intercepta y simula la respuesta de la API de Pikachu.
 
 - **cypress/support/index.js**  
   Archivo de configuración donde se cargan los comandos y configuraciones globales de Cypress.
@@ -97,4 +119,3 @@ Se ha implementado una suite de pruebas automatizadas usando **Cypress**, que in
 ## Contribuciones
 
 Las contribuciones son bienvenidas. Si tienes alguna idea para mejorar el proyecto o encuentras un problema, por favor, abre un **Issue** o envía una **Pull Request**.
-

@@ -1,0 +1,13 @@
+{
+  "selectors": {
+    "urlInput": "#url-input",
+    "searchButton": "button[type='submit']",
+    "messageElement": ".ApiExplorer-module__message--e4oy9",
+    "jsonViewer": ".JsonViewer-module__code--2XOHn",
+    "rawJsonInput": "label > input"
+  },
+  "pokemon": {
+    "name": "pikachu",
+    "id": 25
+  }
+}
